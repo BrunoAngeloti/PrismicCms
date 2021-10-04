@@ -15,10 +15,11 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {resultados.map((imagens) => (        
-        <img src={imagens.data.fotos.url}/>
-      ))}
-
+      {/*resultados.map((imagens) => (        
+        <img key={imagens.data.fotos.url} src={imagens.data.fotos.url}/>
+      ))*/}
+      <p>{JSON.stringify(props.depoimentos[0].data.imagemusuario.url)}</p>
+      <img className={styles.fotoUser} src={props.depoimentos[0].data.imagemusuario.url} alt="" />
     </div>
   )
 }
@@ -26,9 +27,11 @@ export default function Home(props) {
 export async function getServerSideProps({res}){
   const client = await Prismic.client('https://brunoangeloti.prismic.io/api/v2')
   const img = await client.query(Prismic.Predicates.at('document.type', 'photosgal'))
+  const depoimentos = await client.query(Prismic.Predicates.at('document.type', 'depoimentos'))
   return{
     props:{
-      resultados: img.results
+      resultados: img.results,
+      depoimentos: depoimentos.results
     }
   }
 }
